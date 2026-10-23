@@ -19,6 +19,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # Hive adapters (*.g.dart) are gitignored, so generate them here.
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
       # Release builds are universal (x86_64 + arm64), so the app runs on Intel and Apple Silicon Macs.
       - name: Build
         run: |
