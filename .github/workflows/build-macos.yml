@@ -21,7 +21,14 @@ jobs:
 
       # Release builds are universal (x86_64 + arm64), so the app runs on Intel and Apple Silicon Macs.
       - name: Build
-        run: flutter build macos --release
+        run: |
+          set -o pipefail
+          flutter build macos --release -v 2>&1 | tee build.log || {
+            # Surface the error as an annotation, readable without signing in to view logs.
+            grep -iE "error|failed" build.log | grep -v "^\s*$" | tail -40 | sed 's/%/%25/g' | awk 'BEGIN{ORS="%0A"}{print}' | sed 's/^/::error title=build::/'
+            echo
+            exit 1
+          }
 
       # ditto preserves the bundle's symlinks and ad-hoc signature.
       - name: Zip app
