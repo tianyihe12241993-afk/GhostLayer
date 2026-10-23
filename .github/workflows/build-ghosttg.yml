@@ -1,0 +1,30 @@
+name: Build GhostTG
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev]
+    paths:
+      - 'ghost_tg/**'
+      - '.github/workflows/build-ghosttg.yml'
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build app bundle
+        run: |
+          chmod +x ghost_tg/build-app.sh
+          ghost_tg/build-app.sh
+
+      - name: Zip
+        run: |
+          cd ghost_tg
+          ditto -c -k --keepParent GhostTG.app "$GITHUB_WORKSPACE/GhostTG-macos.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GhostTG-macos
+          path: GhostTG-macos.zip

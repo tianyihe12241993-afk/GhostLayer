@@ -142,3 +142,7 @@ Thumbs.db
 **/macos/.symlinks/
 **/macos/xcuserdata/
 **/macos/build/
+
+# Swift build output
+ghost_tg/.build/
+ghost_tg/GhostTG.app/
