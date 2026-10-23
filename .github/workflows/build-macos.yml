@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
   push:
     branches: [dev, main]
+    paths:
+      - 'lib/**'
+      - 'macos/**'
+      - 'pubspec.*'
+      - '.github/workflows/build-macos.yml'
 
 jobs:
   build:

@@ -29,9 +29,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
             backing: .buffered,
             defer: false)
         window.title = "Telegram — Private"
-        window.center()
         window.contentView = webView
         window.isReleasedWhenClosed = false
+        window.setContentSize(NSSize(width: 1040, height: 740))   // default size
+        window.center()
+        // Remember size + position across launches (drag to resize once, it sticks).
+        window.setFrameAutosaveName("GhostTGMainWindow")
         applyCaptureHidden()
 
         window.makeKeyAndOrderFront(nil)
