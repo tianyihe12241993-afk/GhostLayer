@@ -1,0 +1,36 @@
+name: Build macOS app
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev, main]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Release builds are universal (x86_64 + arm64), so the app runs on Intel and Apple Silicon Macs.
+      - name: Build
+        run: flutter build macos --release
+
+      # ditto preserves the bundle's symlinks and ad-hoc signature.
+      - name: Zip app
+        run: |
+          cd build/macos/Build/Products/Release
+          lipo -info GhostLayer.app/Contents/MacOS/GhostLayer
+          ditto -c -k --keepParent GhostLayer.app "$GITHUB_WORKSPACE/GhostLayer-macos.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GhostLayer-macos
+          path: GhostLayer-macos.zip
