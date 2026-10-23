@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>GhostTG</string>
 	<key>CFBundleDisplayName</key>
-	<string>Telegram Private</string>
+	<string>GhostTG</string>
 	<key>CFBundleExecutable</key>
 	<string>GhostTG</string>
 	<key>CFBundleIdentifier</key>

@@ -8,6 +8,7 @@ import WebKit
 final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUIDelegate {
     private var window: NSWindow!
     private var webView: WKWebView!
+    private var toggleItem: NSMenuItem?
     private var captureHidden = true   // start invisible to capture
 
     private let homeURL = URL(string: "https://web.telegram.org/k/")!
@@ -35,13 +36,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         window.center()
         // Remember size + position across launches (drag to resize once, it sticks).
         window.setFrameAutosaveName("GhostTGMainWindow")
+
+        setupMenu()
         applyCaptureHidden()
 
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
 
         webView.load(URLRequest(url: homeURL))
-        setupMenu()
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
@@ -52,7 +54,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         // .none   -> excluded from screenshots / recording / screen sharing
         // .readOnly -> normal, visible to capture
         window.sharingType = captureHidden ? .none : .readOnly
-        window.title = captureHidden ? "Telegram — Private (hidden)" : "Telegram — Private (VISIBLE)"
+        // Checkmark in the menu shows current state, keeping the title clean.
+        toggleItem?.state = captureHidden ? .on : .off
     }
 
     @objc private func toggleCapture() {
@@ -92,10 +95,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         mainMenu.addItem(appItem)
         let appMenu = NSMenu()
         appItem.submenu = appMenu
-        let toggle = appMenu.addItem(withTitle: "Toggle Capture Visibility",
+        let toggle = appMenu.addItem(withTitle: "Hidden from screen capture",
                                      action: #selector(toggleCapture), keyEquivalent: "p")
         toggle.keyEquivalentModifierMask = [.command, .shift]
         toggle.target = self
+        toggle.state = captureHidden ? .on : .off
+        toggleItem = toggle
         appMenu.addItem(.separator())
         appMenu.addItem(withTitle: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
 
