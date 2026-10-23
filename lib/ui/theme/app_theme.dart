@@ -49,7 +49,7 @@ class AppTheme {
         onSurface: lightOnSurface,
         onSurfaceVariant: lightOnSurfaceVariant,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -117,7 +117,7 @@ class AppTheme {
         onSurface: darkOnSurface,
         onSurfaceVariant: darkOnSurfaceVariant,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
